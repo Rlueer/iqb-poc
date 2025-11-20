@@ -22,4 +22,5 @@ public interface StudentService {
     List<Course> getCompletedCourses(Long studentId);
 
     double calculateAverage(Long studentId);
+
 }

@@ -30,6 +30,20 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public ExamResult updateExam(Long id, ExamResult examResult) {
+        ExamResult existing = examResultRepository.findById(id).orElseThrow();
+
+        // Student değişmeyecek (istekte sadece id geliyor)
+        existing.setScore(examResult.getScore());
+
+        // Eğer course değişsin istersen bunu da açabiliriz:
+        // Course c = courseRepository.findById(examResult.getCourse().getId()).orElseThrow();
+        // existing.setCourse(c);
+
+        return examResultRepository.save(existing);
+    }
+
+    @Override
     public ExamResult getExamById(Long id) {
         return examResultRepository.findById(id).orElseThrow();
     }

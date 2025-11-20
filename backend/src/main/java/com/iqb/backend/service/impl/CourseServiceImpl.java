@@ -2,6 +2,7 @@ package com.iqb.backend.service.impl;
 
 import com.iqb.backend.model.Course;
 import com.iqb.backend.repository.CourseRepository;
+import com.iqb.backend.repository.ExamResultRepository;
 import com.iqb.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
+    private final ExamResultRepository examResultRepository;
 
     @Override
     public Course createCourse(Course course) {
@@ -28,6 +30,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourse(Long id) {
+        // 1) Önce o kursun tüm sınavlarını sil
+        examResultRepository.deleteByCourseId(id);
+
+        // 2) Sonra kursu sil
         courseRepository.deleteById(id);
     }
 

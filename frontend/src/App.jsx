@@ -7,7 +7,7 @@ import HomePage from "./pages/HomePage.jsx";
 import CourseCreate from "./pages/CourseCreate.jsx";
 import StudentEdit from "./pages/StudentEdit.jsx";
 import CourseList from "./pages/CourseList.jsx";
-
+import CourseEdit from "./pages/CourseEdit.jsx";
 
 function App() {
     return (
@@ -22,6 +22,8 @@ function App() {
                 <Route path="/students/new" element={<StudentCreate />} />
                 <Route path="/students/:id/edit" element={<StudentEdit />} />
                 <Route path="/courses" element={<CourseList />} />
+                <Route path="/courses/:id/edit" element={<CourseEdit />} />
+
             </Routes>
         </BrowserRouter>
     );

@@ -13,4 +13,6 @@ public interface ExamService {
     List<ExamResult> getAllExams();
 
     void deleteExam(Long id);
+
+    ExamResult updateExam(Long id, ExamResult examResult);
 }

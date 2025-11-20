@@ -1,5 +1,6 @@
 package com.iqb.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Student {
 
     @Id
@@ -28,4 +30,8 @@ public class Student {
 
     @Column(nullable = false)
     private String gsmNumber;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private java.util.List<ExamResult> exams;
 }
