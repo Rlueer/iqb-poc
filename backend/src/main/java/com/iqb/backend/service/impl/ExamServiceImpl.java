@@ -24,10 +24,18 @@ public class ExamServiceImpl implements ExamService {
     public ExamResult createExam(ExamResult examResult) {
         Student s = studentRepository.findById(examResult.getStudent().getId()).orElseThrow();
         Course c = courseRepository.findById(examResult.getCourse().getId()).orElseThrow();
+
+        // 3 sınır kontrolü
+        long count = examResultRepository.countByStudentAndCourse(s, c);
+        if (count >= 3) {
+            throw new RuntimeException("This course already has 3 exam results for this student.");
+        }
+
         examResult.setStudent(s);
         examResult.setCourse(c);
         return examResultRepository.save(examResult);
     }
+
 
     @Override
     public ExamResult updateExam(Long id, ExamResult examResult) {

@@ -10,7 +10,7 @@ export default function ExamCreate() {
     const [courseId, setCourseId] = useState("");
     const [score, setScore] = useState("");
     const [student, setStudent] = useState(null);
-
+    const [existingExams, setExistingExams] = useState([]);
 
     // Courses yükle
     useEffect(() => {
@@ -20,12 +20,21 @@ export default function ExamCreate() {
         api.get(`/students/${id}`)
             .then(res => setStudent(res.data))
             .catch(err => console.error(err));
+        api.get(`/students/${id}/exams`)
+            .then(res => setExistingExams(res.data))
+            .catch(err => console.error(err));
+    }, [id]);
 
-    }, []);
+    const examsForSelectedCourse = existingExams.filter(
+        (e) => e.course.id === Number(courseId)
+    );
 
     const submitExam = async (e) => {
         e.preventDefault();
-
+        if (examsForSelectedCourse.length >= 3) {
+            alert("This student already has 3 exam results for this course.");
+            return;
+        }
 
         try {
             await api.post("/exams", {
@@ -49,7 +58,9 @@ export default function ExamCreate() {
             </Link>
             <h2>Add Exam for {student ? student.fullName : `Student #${id}`}</h2>
 
+
             <form onSubmit={submitExam} className="mt-3">
+
 
                 <div className="mb-3">
                     <label className="form-label">Course</label>

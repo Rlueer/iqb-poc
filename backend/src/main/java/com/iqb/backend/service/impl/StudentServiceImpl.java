@@ -106,4 +106,31 @@ public class StudentServiceImpl implements StudentService {
         if (completedCourses == 0) return 0;
         return sum / completedCourses;
     }
+
+    @Override
+    public Map<Long, Double> getCourseAverages(Long studentId) {
+        Student s = studentRepository.findById(studentId).orElseThrow();
+        List<ExamResult> exams = examResultRepository.findByStudent(s);
+
+        Map<Course, List<ExamResult>> grouped =
+                exams.stream().collect(Collectors.groupingBy(ExamResult::getCourse));
+
+        Map<Long, Double> courseAverages = new HashMap<>();
+
+        for (var entry : grouped.entrySet()) {
+            if (entry.getValue().size() >= 3) {
+                double avg = entry.getValue().stream()
+                        .mapToInt(ExamResult::getScore)
+                        .average()
+                        .orElse(0);
+
+                courseAverages.put(entry.getKey().getId(), avg);
+            }
+        }
+
+        return courseAverages;
+    }
+
+
+
 }

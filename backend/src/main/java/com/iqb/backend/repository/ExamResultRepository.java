@@ -21,4 +21,6 @@ public interface ExamResultRepository extends JpaRepository<ExamResult, Long> {
     @Transactional
     void deleteByCourseId(Long courseId);
 
+    long countByStudentAndCourse(Student student, Course course);
+
 }

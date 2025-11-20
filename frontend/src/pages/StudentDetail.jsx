@@ -7,10 +7,11 @@ export default function StudentDetail() {
 
     const [student, setStudent] = useState(null);
     const [exams, setExams] = useState([]);
-    const [average, setAverage] = useState(null);
     const [completedCourses, setCompletedCourses] = useState([]);
     const [editExam, setEditExam] = useState(null);   // edit modal için exam objesi
     const [editScore, setEditScore] = useState("");   // score input
+    const [courseAverages, setCourseAverages] = useState({});
+
 
 
     useEffect(() => {
@@ -21,11 +22,11 @@ export default function StudentDetail() {
         api.get(`/students/${id}/exams`)
             .then(res => setExams(res.data))
             .catch(err => console.error(err));
-        api.get(`/students/${id}/average`)
-            .then(res => setAverage(res.data))
-            .catch(err => console.error(err));
         api.get(`/students/${id}/completed-courses`)
             .then(res => setCompletedCourses(res.data))
+            .catch(err => console.error(err));
+        api.get(`/students/${id}/course-averages`)
+            .then(res => setCourseAverages(res.data))
             .catch(err => console.error(err));
 
     }, [id]);
@@ -89,14 +90,6 @@ export default function StudentDetail() {
                 + Add Exam
             </Link>
 
-            <div className="mb-4">
-                <h3>Average Score</h3>
-                {average === null ? (
-                    <p>No completed courses yet.</p>
-                ) : (
-                    <p><strong>{Number(average).toFixed(2)}</strong></p>
-                )}
-            </div>
 
             <div className="mb-4">
                 <h3>Completed Courses</h3>
@@ -105,11 +98,14 @@ export default function StudentDetail() {
                 ) : (
                     <ul>
                         {completedCourses.map(c => (
-                            <li key={c.id}>{c.name}</li>
+                            <li key={c.id}>
+                                {c.name} — <strong>Avg: {Number(courseAverages[c.id]).toFixed(2)}</strong>
+                            </li>
                         ))}
                     </ul>
                 )}
             </div>
+
 
             <div className="mb-4">
                 <h3>Exam Results</h3>

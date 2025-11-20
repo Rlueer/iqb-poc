@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -61,4 +62,10 @@ public class StudentController {
     public double getAverage(@PathVariable Long id) {
         return studentService.calculateAverage(id);
     }
+
+    @GetMapping("/{id}/course-averages")
+    public Map<Long, Double> getCourseAverages(@PathVariable Long id) {
+        return studentService.getCourseAverages(id);
+    }
+
 }

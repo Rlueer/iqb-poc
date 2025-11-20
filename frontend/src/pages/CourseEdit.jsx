@@ -1,5 +1,6 @@
+// src/pages/CourseEdit.jsx
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
 
 export default function CourseEdit() {
@@ -28,6 +29,10 @@ export default function CourseEdit() {
 
     return (
         <div className="container mt-4">
+            <Link to="/courses" className="btn btn-link mb-3">
+                ← Back to Courses
+            </Link>
+
             <h2>Edit Course</h2>
 
             <form onSubmit={submitUpdate} className="mt-3">
