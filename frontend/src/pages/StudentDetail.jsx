@@ -8,6 +8,8 @@ export default function StudentDetail() {
     const [student, setStudent] = useState(null);
     const [exams, setExams] = useState([]);
     const [average, setAverage] = useState(null);
+    const [completedCourses, setCompletedCourses] = useState([]);
+
 
 
     useEffect(() => {
@@ -21,11 +23,17 @@ export default function StudentDetail() {
         api.get(`/students/${id}/average`)
             .then(res => setAverage(res.data))
             .catch(err => console.error(err));
+        api.get(`/students/${id}/completed-courses`)
+            .then(res => setCompletedCourses(res.data))
+            .catch(err => console.error(err));
 
     }, [id]);
 
     return (
         <div>
+            <Link to="/students" className="btn btn-link">
+                ← Back to Students
+            </Link>
             <h1>Student Detail</h1>
 
             {student && (
@@ -49,6 +57,16 @@ export default function StudentDetail() {
                 <p><strong>{Number(average).toFixed(2)}</strong></p>
             )}
 
+            <h3>Completed Courses</h3>
+            {completedCourses.length === 0 ? (
+                <p>No completed courses.</p>
+            ) : (
+                <ul>
+                    {completedCourses.map(c => (
+                        <li key={c.id}>{c.name}</li>
+                    ))}
+                </ul>
+            )}
 
 
             <h3>Exam Results</h3>

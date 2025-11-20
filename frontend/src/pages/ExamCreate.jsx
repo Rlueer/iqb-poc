@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../api/axios";
 
@@ -9,12 +9,18 @@ export default function ExamCreate() {
     const [courses, setCourses] = useState([]);
     const [courseId, setCourseId] = useState("");
     const [score, setScore] = useState("");
+    const [student, setStudent] = useState(null);
+
 
     // Courses yükle
     useEffect(() => {
         api.get("/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error(err));
+        api.get(`/students/${id}`)
+            .then(res => setStudent(res.data))
+            .catch(err => console.error(err));
+
     }, []);
 
     const submitExam = async (e) => {
@@ -38,7 +44,10 @@ export default function ExamCreate() {
 
     return (
         <div className="container mt-4">
-            <h2>Add Exam for Student #{id}</h2>
+            <Link to={`/students/${id}`} className="btn btn-link">
+                ← Back to Student info
+            </Link>
+            <h2>Add Exam for {student ? student.fullName : `Student #${id}`}</h2>
 
             <form onSubmit={submitExam} className="mt-3">
 

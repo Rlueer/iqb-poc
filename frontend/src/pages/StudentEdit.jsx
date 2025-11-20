@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
-export default function StudentCreate() {
+export default function StudentEdit() {
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
@@ -16,24 +17,30 @@ export default function StudentCreate() {
         setForm(prev => ({ ...prev, [field]: value }));
     };
 
-    const submitStudent = async (e) => {
+    useEffect(() => {
+        api.get(`/students/${id}`)
+            .then(res => setForm(res.data))
+            .catch(err => console.error(err));
+    }, [id]);
+
+    const submitUpdate = async (e) => {
         e.preventDefault();
 
         try {
-            await api.post("/students", form);
-            alert("Student created!");
-            navigate("/"); // Ana sayfaya dön
+            await api.put(`/students/${id}`, form);
+            alert("Student updated!");
+            navigate("/"); // geri dön
         } catch (err) {
             console.error(err);
-            alert("Error creating student.");
+            alert("Error updating student.");
         }
     };
 
     return (
         <div className="container mt-4">
-            <h2>Add New Student</h2>
+            <h2>Edit Student</h2>
 
-            <form onSubmit={submitStudent} className="mt-3">
+            <form onSubmit={submitUpdate} className="mt-3">
 
                 <div className="mb-3">
                     <label className="form-label">Full Name</label>
@@ -80,7 +87,7 @@ export default function StudentCreate() {
                 </div>
 
                 <button className="btn btn-primary" type="submit">
-                    Add Student
+                    Save Changes
                 </button>
             </form>
         </div>

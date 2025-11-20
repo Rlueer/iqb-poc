@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios.js";
 import { Link } from "react-router-dom";
+import api from "../api/axios";
 
 export default function StudentList() {
     const [students, setStudents] = useState([]);
     const [query, setQuery] = useState("");
 
     const loadStudents = async () => {
-        const res = await api.get("/students");
-        setStudents(res.data);
+        try {
+            const res = await api.get("/students");
+            setStudents(res.data);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const searchStudents = async () => {
@@ -17,17 +21,36 @@ export default function StudentList() {
             return;
         }
 
-        const res = await api.get(`/students/search?q=${query}`);
-        setStudents(res.data);
+        try {
+            const res = await api.get(`/students/search?q=${query}`);
+            setStudents(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const deleteStudent = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this student?")) return;
+
+        try {
+            await api.delete(`/students/${id}`);
+            loadStudents();
+        } catch (err) {
+            console.error(err);
+            alert("Error deleting student.");
+        }
     };
 
     useEffect(() => {
         loadStudents();
     }, []);
 
-
     return (
         <div className="container mt-4">
+            <Link to="/" className="btn btn-link">
+                ← Back to HomePage
+            </Link>
+
             <h2>Students</h2>
 
             <div className="d-flex mb-3">
@@ -54,7 +77,7 @@ export default function StudentList() {
                     <th>Email</th>
                     <th>GSM</th>
                     <th>Number</th>
-                    <th></th>
+                    <th style={{ width: "200px" }}>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -66,9 +89,26 @@ export default function StudentList() {
                         <td>{s.gsmNumber}</td>
                         <td>{s.number}</td>
                         <td>
-                            <Link to={`/students/${s.id}`} className="btn btn-sm btn-info">
+                            <Link
+                                to={`/students/${s.id}`}
+                                className="btn btn-sm btn-info me-2"
+                            >
                                 Details
                             </Link>
+
+                            <Link
+                                to={`/students/${s.id}/edit`}
+                                className="btn btn-sm btn-warning me-2"
+                            >
+                                Edit
+                            </Link>
+
+                            <button
+                                className="btn btn-sm btn-danger"
+                                onClick={() => deleteStudent(s.id)}
+                            >
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 ))}
