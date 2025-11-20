@@ -54,6 +54,10 @@ export default function CourseList() {
                         <td>{c.id}</td>
                         <td>{c.name}</td>
                         <td>
+                            <Link to={`/courses/${c.id}`} className="btn btn-sm btn-info me-2">
+                                Details
+                            </Link>
+
                             <Link
                                 to={`/courses/${c.id}/edit`}
                                 className="btn btn-sm btn-warning me-2"

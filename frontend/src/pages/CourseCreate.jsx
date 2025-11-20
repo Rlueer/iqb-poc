@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import api from "../api/axios";
 
 export default function CourseCreate() {
@@ -21,6 +21,9 @@ export default function CourseCreate() {
 
     return (
         <div className="container mt-4">
+            <Link className="btn btn-link" to="/courses">
+                ← Back to Courses
+            </Link>
             <h2>Add New Course</h2>
 
             <form onSubmit={submitCourse} className="mt-3">

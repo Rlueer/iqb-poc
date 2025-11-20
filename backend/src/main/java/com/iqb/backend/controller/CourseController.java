@@ -1,5 +1,6 @@
 package com.iqb.backend.controller;
 
+import com.iqb.backend.dto.CourseStudentDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -39,4 +40,10 @@ public class CourseController {
     public Course getById(@PathVariable Long id) {
         return courseService.getCourseById(id);
     }
+
+    @GetMapping("/{id}/students")
+    public List<CourseStudentDTO> getCourseStudents(@PathVariable Long id) {
+        return courseService.getCourseStudents(id);
+    }
+
 }

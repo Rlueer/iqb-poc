@@ -8,21 +8,23 @@ import CourseCreate from "./pages/CourseCreate.jsx";
 import StudentEdit from "./pages/StudentEdit.jsx";
 import CourseList from "./pages/CourseList.jsx";
 import CourseEdit from "./pages/CourseEdit.jsx";
+import CourseDetail from "./pages/CourseDetail.jsx";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/students" element={<StudentList />} />
-                <Route path="/students/:id" element={<StudentDetail />} />
-                <Route path="/students/new" element={<StudentCreate />} />
-                <Route path="/students/:id/add-exam" element={<ExamCreate />} />
                 <Route path="/" element={<HomePage />} />
-                <Route path="/courses/new" element={<CourseCreate />} />
+                <Route path="/students" element={<StudentList />} />
                 <Route path="/students/new" element={<StudentCreate />} />
+                <Route path="/students/:id" element={<StudentDetail />} />
+                <Route path="/students/:id/add-exam" element={<ExamCreate />} />
                 <Route path="/students/:id/edit" element={<StudentEdit />} />
+
+                <Route path="/courses/new" element={<CourseCreate />} />
                 <Route path="/courses" element={<CourseList />} />
                 <Route path="/courses/:id/edit" element={<CourseEdit />} />
+                <Route path="/courses/:id" element={<CourseDetail />} />
 
             </Routes>
         </BrowserRouter>

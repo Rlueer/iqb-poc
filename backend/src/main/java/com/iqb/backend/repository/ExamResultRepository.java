@@ -23,4 +23,7 @@ public interface ExamResultRepository extends JpaRepository<ExamResult, Long> {
 
     long countByStudentAndCourse(Student student, Course course);
 
+    List<ExamResult> findByCourse(Course course);
+
+
 }
