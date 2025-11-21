@@ -1,7 +1,9 @@
 package com.iqb.backend.controller;
 
+import com.iqb.backend.dto.ExamResultCreateDTO;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.service.ExamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +18,8 @@ public class ExamController {
     private final ExamService examService;
 
     @PostMapping
-    public ExamResult create(@RequestBody ExamResult examResult) {
-        return examService.createExam(examResult);
+    public ExamResult create(@RequestBody @Valid ExamResultCreateDTO dto) {
+        return examService.createExamResult(dto);
     }
 
     @GetMapping

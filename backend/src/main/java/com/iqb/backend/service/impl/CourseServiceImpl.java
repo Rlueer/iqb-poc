@@ -1,6 +1,8 @@
 package com.iqb.backend.service.impl;
 
+import com.iqb.backend.dto.CourseCreateDTO;
 import com.iqb.backend.dto.CourseStudentDTO;
+import com.iqb.backend.dto.CourseUpdateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.model.Student;
@@ -23,16 +25,21 @@ public class CourseServiceImpl implements CourseService {
     private final ExamResultRepository examResultRepository;
 
     @Override
-    public Course createCourse(Course course) {
+    public Course createCourse(CourseCreateDTO dto) {
+        Course course = Course.builder()
+                .name(dto.getName())
+                .build();
+
         return courseRepository.save(course);
     }
 
     @Override
-    public Course updateCourse(Long id, Course course) {
-        Course existing = courseRepository.findById(id).orElseThrow();
-        existing.setName(course.getName());
-        return courseRepository.save(existing);
+    public Course updateCourse(Long id, CourseUpdateDTO dto) {
+        Course course = courseRepository.findById(id).orElseThrow();
+        course.setName(dto.getName());
+        return courseRepository.save(course);
     }
+
 
     @Override
     public void deleteCourse(Long id) {

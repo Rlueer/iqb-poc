@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import api from "../api/axios";
 
 export default function ExamCreate() {
-    const { id } = useParams();         // student id
+    const { id } = useParams();         // Student ID
     const navigate = useNavigate();
 
     const [courses, setCourses] = useState([]);
@@ -12,14 +12,15 @@ export default function ExamCreate() {
     const [student, setStudent] = useState(null);
     const [existingExams, setExistingExams] = useState([]);
 
-    // Courses yükle
     useEffect(() => {
         api.get("/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error(err));
+
         api.get(`/students/${id}`)
             .then(res => setStudent(res.data))
             .catch(err => console.error(err));
+
         api.get(`/students/${id}/exams`)
             .then(res => setExistingExams(res.data))
             .catch(err => console.error(err));
@@ -31,6 +32,7 @@ export default function ExamCreate() {
 
     const submitExam = async (e) => {
         e.preventDefault();
+
         if (examsForSelectedCourse.length >= 3) {
             alert("This student already has 3 exam results for this course.");
             return;
@@ -38,17 +40,18 @@ export default function ExamCreate() {
 
         try {
             await api.post("/exams", {
-                student: { id: Number(id) },
-                course: { id: Number(courseId) },
-                score: Number(score),
+                studentId: Number(id),       // ✔ studentId doğru
+                courseId: Number(courseId),  // ✔ courseId doğru
+                score: Number(score)
             });
+
             alert("Exam added!");
             navigate(`/students/${id}`);
+
         } catch (err) {
             console.error(err);
             alert("Error adding exam.");
         }
-
     };
 
     return (
@@ -58,9 +61,7 @@ export default function ExamCreate() {
             </Link>
             <h2>Add Exam for {student ? student.fullName : `Student #${id}`}</h2>
 
-
             <form onSubmit={submitExam} className="mt-3">
-
 
                 <div className="mb-3">
                     <label className="form-label">Course</label>

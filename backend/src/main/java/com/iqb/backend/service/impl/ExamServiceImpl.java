@@ -1,5 +1,6 @@
 package com.iqb.backend.service.impl;
 
+import com.iqb.backend.dto.ExamResultCreateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.model.Student;
@@ -21,21 +22,22 @@ public class ExamServiceImpl implements ExamService {
     private final CourseRepository courseRepository;
 
     @Override
-    public ExamResult createExam(ExamResult examResult) {
-        Student s = studentRepository.findById(examResult.getStudent().getId()).orElseThrow();
-        Course c = courseRepository.findById(examResult.getCourse().getId()).orElseThrow();
+    public ExamResult createExamResult(ExamResultCreateDTO dto) {
 
-        // 3 sınır kontrolü
-        long count = examResultRepository.countByStudentAndCourse(s, c);
-        if (count >= 3) {
-            throw new RuntimeException("This course already has 3 exam results for this student.");
-        }
+        Student student = studentRepository.findById(dto.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        examResult.setStudent(s);
-        examResult.setCourse(c);
-        return examResultRepository.save(examResult);
+        Course course = courseRepository.findById(dto.getCourseId())
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        ExamResult exam = ExamResult.builder()
+                .student(student)
+                .course(course)
+                .score(dto.getScore())
+                .build();
+
+        return examResultRepository.save(exam);
     }
-
 
     @Override
     public ExamResult updateExam(Long id, ExamResult examResult) {
@@ -50,6 +52,7 @@ public class ExamServiceImpl implements ExamService {
 
         return examResultRepository.save(existing);
     }
+
 
     @Override
     public ExamResult getExamById(Long id) {

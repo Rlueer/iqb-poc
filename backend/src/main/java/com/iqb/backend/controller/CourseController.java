@@ -1,8 +1,11 @@
 package com.iqb.backend.controller;
 
+import com.iqb.backend.dto.CourseCreateDTO;
 import com.iqb.backend.dto.CourseStudentDTO;
+import com.iqb.backend.dto.CourseUpdateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.service.CourseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +20,13 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public Course create(@RequestBody Course course) {
-        return courseService.createCourse(course);
+    public Course create(@RequestBody @Valid CourseCreateDTO dto) {
+        return courseService.createCourse(dto);
     }
 
     @PutMapping("/{id}")
-    public Course update(@PathVariable Long id, @RequestBody Course course) {
-        return courseService.updateCourse(id, course);
+    public Course update(@PathVariable Long id, @RequestBody @Valid CourseUpdateDTO dto) {
+        return courseService.updateCourse(id, dto);
     }
 
     @DeleteMapping("/{id}")
