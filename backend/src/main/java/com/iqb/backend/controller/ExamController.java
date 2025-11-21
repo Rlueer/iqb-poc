@@ -1,6 +1,7 @@
 package com.iqb.backend.controller;
 
 import com.iqb.backend.dto.ExamResultCreateDTO;
+import com.iqb.backend.dto.ExamResultUpdateDTO;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.service.ExamService;
 import jakarta.validation.Valid;
@@ -38,7 +39,12 @@ public class ExamController {
     }
 
     @PutMapping("/{id}")
-    public ExamResult update(@PathVariable Long id, @RequestBody ExamResult examResult) {
-        return examService.updateExam(id, examResult);
+    public ExamResult update(
+            @PathVariable Long id,
+            @Valid @RequestBody ExamResultUpdateDTO dto
+    ) {
+        return examService.updateExam(id, dto);
     }
+
+
 }

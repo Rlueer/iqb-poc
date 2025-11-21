@@ -1,6 +1,7 @@
 package com.iqb.backend.service.impl;
 
 import com.iqb.backend.dto.ExamResultCreateDTO;
+import com.iqb.backend.dto.ExamResultUpdateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.model.Student;
@@ -40,16 +41,9 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamResult updateExam(Long id, ExamResult examResult) {
+    public ExamResult updateExam(Long id, ExamResultUpdateDTO dto) {
         ExamResult existing = examResultRepository.findById(id).orElseThrow();
-
-        // Student değişmeyecek (istekte sadece id geliyor)
-        existing.setScore(examResult.getScore());
-
-        // Eğer course değişsin istersen bunu da açabiliriz:
-        // Course c = courseRepository.findById(examResult.getCourse().getId()).orElseThrow();
-        // existing.setCourse(c);
-
+        existing.setScore(dto.getScore());
         return examResultRepository.save(existing);
     }
 

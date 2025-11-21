@@ -1,6 +1,7 @@
 package com.iqb.backend.service;
 
 import com.iqb.backend.dto.ExamResultCreateDTO;
+import com.iqb.backend.dto.ExamResultUpdateDTO;
 import com.iqb.backend.model.ExamResult;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface ExamService {
 
     void deleteExam(Long id);
 
-    ExamResult updateExam(Long id, ExamResult examResult);
+    ExamResult updateExam(Long id, ExamResultUpdateDTO dto);
 
     ExamResult createExamResult(ExamResultCreateDTO dto);
 
