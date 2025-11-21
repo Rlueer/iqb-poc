@@ -1,9 +1,12 @@
 package com.iqb.backend.controller;
 
+import com.iqb.backend.dto.StudentCreateDTO;
+import com.iqb.backend.dto.StudentUpdateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.model.Student;
 import com.iqb.backend.service.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +22,14 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping
-    public Student create(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public Student create(@Valid @RequestBody StudentCreateDTO dto) {
+        return studentService.createStudent(dto);
     }
 
     @PutMapping("/{id}")
-    public Student update(@PathVariable Long id, @RequestBody Student student) {
-        return studentService.updateStudent(id, student);
+    public Student update(@PathVariable Long id,
+                          @Valid @RequestBody StudentUpdateDTO dto) {
+        return studentService.updateStudent(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -67,5 +71,4 @@ public class StudentController {
     public Map<Long, Double> getCourseAverages(@PathVariable Long id) {
         return studentService.getCourseAverages(id);
     }
-
 }

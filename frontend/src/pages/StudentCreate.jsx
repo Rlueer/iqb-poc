@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import api from "../api/axios";
 
 export default function StudentCreate() {
@@ -21,16 +21,23 @@ export default function StudentCreate() {
 
         try {
             await api.post("/students", form);
-            alert("Student created!");
-            navigate("/"); // Ana sayfaya dön
+            navigate("/students");
         } catch (err) {
-            console.error(err);
-            alert("Error creating student.");
+            if (err.response && err.response.data) {
+                const errors = err.response.data;
+                let msg = Object.values(errors).join("\n");
+                alert(msg);
+            } else {
+                alert("Server error");
+            }
         }
     };
 
     return (
         <div className="container mt-4">
+            <Link to={`/students`} className="btn btn-link">
+                ← Back to Students
+            </Link>
             <h2>Add New Student</h2>
 
             <form onSubmit={submitStudent} className="mt-3">

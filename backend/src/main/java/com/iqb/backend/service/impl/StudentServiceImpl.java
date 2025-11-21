@@ -1,5 +1,7 @@
 package com.iqb.backend.service.impl;
 
+import com.iqb.backend.dto.StudentCreateDTO;
+import com.iqb.backend.dto.StudentUpdateDTO;
 import com.iqb.backend.model.Course;
 import com.iqb.backend.model.ExamResult;
 import com.iqb.backend.model.Student;
@@ -21,18 +23,28 @@ public class StudentServiceImpl implements StudentService {
     private final ExamResultRepository examResultRepository;
     private final CourseRepository courseRepository;
 
+    // CREATE ------------------------------------------------------------
     @Override
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
+    public Student createStudent(StudentCreateDTO dto) {
+        Student s = new Student();
+        s.setFullName(dto.getFullName());
+        s.setEmail(dto.getEmail());
+        s.setNumber(dto.getNumber());
+        s.setGsmNumber(dto.getGsmNumber());
+
+        return studentRepository.save(s);
     }
 
+    // UPDATE ------------------------------------------------------------
     @Override
-    public Student updateStudent(Long id, Student student) {
+    public Student updateStudent(Long id, StudentUpdateDTO dto) {
         Student existing = studentRepository.findById(id).orElseThrow();
-        existing.setFullName(student.getFullName());
-        existing.setEmail(student.getEmail());
-        existing.setNumber(student.getNumber());
-        existing.setGsmNumber(student.getGsmNumber());
+
+        existing.setFullName(dto.getFullName());
+        existing.setEmail(dto.getEmail());
+        existing.setNumber(dto.getNumber());
+        existing.setGsmNumber(dto.getGsmNumber());
+
         return studentRepository.save(existing);
     }
 
@@ -61,12 +73,14 @@ public class StudentServiceImpl implements StudentService {
         return new ArrayList<>(results);
     }
 
+    // GET STUDENT'S EXAMS ------------------------------------------------------------
     @Override
     public List<ExamResult> getStudentExams(Long studentId) {
         Student s = studentRepository.findById(studentId).orElseThrow();
         return examResultRepository.findByStudent(s);
     }
 
+    // COMPLETED COURSES --------------------------------------------------------------
     @Override
     public List<Course> getCompletedCourses(Long studentId) {
         Student s = studentRepository.findById(studentId).orElseThrow();
@@ -81,6 +95,7 @@ public class StudentServiceImpl implements StudentService {
                 .collect(Collectors.toList());
     }
 
+    // OVERALL AVERAGE --------------------------------------------------------------
     @Override
     public double calculateAverage(Long studentId) {
         Student s = studentRepository.findById(studentId).orElseThrow();
@@ -107,6 +122,7 @@ public class StudentServiceImpl implements StudentService {
         return sum / completedCourses;
     }
 
+    // AVERAGE PER COURSE --------------------------------------------------------------
     @Override
     public Map<Long, Double> getCourseAverages(Long studentId) {
         Student s = studentRepository.findById(studentId).orElseThrow();
@@ -130,7 +146,4 @@ public class StudentServiceImpl implements StudentService {
 
         return courseAverages;
     }
-
-
-
 }
