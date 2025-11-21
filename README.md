@@ -1,116 +1,69 @@
-IQB Student Management POC – Full Stack Application
+IQB Student Management POC
+Spring Boot · PostgreSQL · React · Vite
 
-Spring Boot + PostgreSQL + React + Vite
+Bu proje, IQB Solutions teknik değerlendirmesi kapsamında hazırlanan bir full-stack Proof-of-Concept (POC) uygulamasıdır.
+Amaç; temiz backend mimarisi, modern frontend geliştirme ve gerçek bir veritabanı kullanarak öğrenci–ders–sınav yönetimini modelleyen bir sistem kurmaktır.
 
-Bu proje, IQB Solutions tarafından verilen teknik değerlendirme kapsamında hazırlanmış bir Proof-of-Concept (POC) full-stack uygulamasıdır. Amaç; temiz mimaride Spring Boot backend, PostgreSQL veritabanı ve React tabanlı bir frontend kullanarak öğrenci–ders–sınav yönetim sistemi geliştirmektir.
+📁 Proje Yapısı
+iqb/
+ ├── backend/     → Spring Boot REST API
+ └── frontend/    → React + Vite SPA
 
-Bu POC, özellikle şu alanlarda mühendislik yetkinliğini göstermeyi hedefler:
+🏛 Backend (Spring Boot)
+Kullanılan Teknolojiler
 
-Backend domain model tasarımı
+Java 23
 
-JPA / Hibernate ilişkisel veri yönetimi
+Spring Boot 3.5.x
 
-Katmanlı mimari (Controller → Service → Repository)
+Spring Web
 
-REST API tasarımı
+Spring Data JPA
 
-React ile modern frontend geliştirme
+Hibernate
 
-Axios ile backend entegrasyonu
+PostgreSQL
 
-Component-based UI yaklaşımı
+Lombok
 
-Arama, listeleme, detay görüntüleme ve iş kuralı uygulamaları
+Validation API
 
-📦 Proje İçeriği
-
-Proje 3 temel bölümden oluşmaktadır:
-
-backend/   → Spring Boot REST API
-frontend/  → React + Vite SPA
-database/  → PostgreSQL 16 (otomatik migration)
-
-🧩 Backend – Spring Boot
-
-Backend, Spring Boot 3.5.x üzerinde geliştirilmiştir ve klasik layered architecture yapısını takip eder.
-
-📁 Paket Yapısı
+Paket Yapısı
 com.iqb.backend
- ├── controller      → REST endpoint’leri
- ├── service         → İş mantığı arayüzleri
- │    └── impl       → Service implementasyonları
- ├── repository      → JPA repository’leri
- ├── model           → Entity sınıfları (Student, Course, ExamResult)
- ├── dto             → Dışarı dönecek özel veri modelleri
- └── exception       → Global hata yönetimi
+ ├── controller        → REST endpoint’leri
+ ├── service           
+ │     └── impl        → İş mantığı implementasyonları
+ ├── repository        → JPA repository interface’leri
+ ├── model             → Entity sınıfları
+ ├── dto               → Özel dönüş modelleri
+ └── exception         → Global hata yönetimi
 
-🧭 Domain Modeli
-
-Sistem üç temel varlıktan oluşur:
-
-🧑 Student
-
+Domain Modelleri
+Student
 id
-
 fullName
-
 email
-
 gsmNumber
-
 number
-
 examResults (OneToMany)
 
-📘 Course
-
+Course
 id
-
 name
-
 examResults (OneToMany)
 
-📝 ExamResult
-
+ExamResult
 id
-
 score
-
+student (ManyToOne)
 course (ManyToOne)
 
-student (ManyToOne)
+Tamamlanmış Kurs Mantığı
 
-Bir öğrencinin tamamladığı kurs:
-→ Aynı ders için en az 3 sınav sonucu varsa completed olarak sayılır.
-
-🛠 Service Katmanı
-
-İş kuralları burada uygulanır.
-
-StudentService
-
-add / update / delete
-
-search by name/email/number/gsm
-
-get student exams
-
-calculate completed courses
-
-calculate average
-
-CourseService
-
-basic CRUD
-
-ExamService
-
-add exam result
-
-list exams
+Bir kurs, bir öğrenci için en az 3 sınav sonucu varsa completed kabul edilir.
 
 🌐 REST API Endpointleri
-Öğrenciler
+Students
 GET    /api/students
 GET    /api/students/search?q=
 GET    /api/students/{id}
@@ -118,41 +71,37 @@ POST   /api/students
 PUT    /api/students/{id}
 DELETE /api/students/{id}
 
-Sınavlar
+Exams
 GET    /api/students/{id}/exams
 POST   /api/exams
 
-Tamamlanmış dersler & ortalama
+Completed Courses & Average
 GET    /api/students/{id}/average
 
-🗄 Veritabanı – PostgreSQL
+🗄 Veritabanı (PostgreSQL)
+Gerekli Kurulum
 
-Hibernate, entity sınıflarına göre tabloları otomatik oluşturur.
+PostgreSQL'de bir veritabanı oluştur:
 
-students
-courses
-exam_results
+CREATE DATABASE iqb_poc;
 
+Spring Konfigürasyonu
 
-Foreign key ilişkileri:
-
-exam_results.student_id → students.id
-
-exam_results.course_id → courses.id
-
-Konfigürasyon:
-application.properties
+backend/src/main/resources/application.properties
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/iqb_poc
 spring.datasource.username=postgres
-spring.datasource.password=******
+spring.datasource.password=yourpassword
+
 spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 
-⚛️ Frontend – React + Vite
 
-Modern, hızlı ve sade SPA (Single Page Application) yapısı tercih edilmiştir.
+Hibernate entity tanımlarına göre tabloları otomatik oluşturur.
 
-🌟 Kullanılan Teknolojiler
+⚛️ Frontend (React + Vite)
+Kullanılan Teknolojiler
 
 React 18
 
@@ -164,120 +113,63 @@ Bootstrap 5
 
 React Router DOM
 
-📁 Klasör Yapısı
+Klasör Yapısı
 src/
  ├── api/
- │     └── axios.js      → backend bağlantısı
+ │     └── axios.js
  ├── pages/
  │     ├── StudentList.jsx
  │     ├── StudentDetail.jsx
  │     └── StudentCreate.jsx
  ├── components/
- │     └── (UI parçaları)
- ├── App.jsx             → router yapısı
- └── main.jsx            → bootstrap + render
+ ├── App.jsx
+ └── main.jsx
 
-🔗 API Bağlantısı (axios instance)
-
-src/api/axios.js
-
+Axios Konfigürasyonu (src/api/axios.js)
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:8080/api"
+  baseURL: "http://localhost:8080/api",
 });
 
-🖥 Frontend Sayfaları
-📋 1) StudentList
-
-tüm öğrencileri listeler
-
-arama kutusu
-
-search by name/email/number/gsm
-
-detaya gitme
-
-öğrenci ekleme butonu
-
-📄 2) StudentDetail
-
-öğrencinin tüm exam result’ları
-
-completed courses listesi
-
-genel ortalama
-
-yeni sınav sonucu ekleme
-
-➕ 3) StudentCreate
-
-form ile öğrenci ekleme
-
-🚀 Projenin Çalıştırılması
-✔ Backend
+🚀 Çalıştırma
+Backend
 cd backend
 mvn clean install
 mvn spring-boot:run
 
 
-Backend 8080 portunda açılır.
+Backend → http://localhost:8080 üzerinde çalışır.
 
-✔ PostgreSQL
-
-Veritabanı oluştur:
-
-CREATE DATABASE iqb_poc;
-
-✔ Frontend
+Frontend
 cd frontend
 npm install
 npm run dev
 
 
-Ardından:
-http://localhost:5173
+Frontend → http://localhost:5173 üzerinde çalışır.
 
 🧪 Test Senaryoları
 
-Öğrenci ekleme
+Öğrenci ekleme / düzenleme / silme
 
-Öğrenci güncelleme
+Öğrenci arama (name, email, gsm, number)
 
-Öğrenci silme
+Ders oluşturma
 
-Arama yapma
+Öğrenciye exam ekleme
 
-Ders ekleme
+Exam listeleme
 
-Sınav ekleme
+Completed courses hesaplama
 
-Öğrenciye ait sınav sonuçlarını görüntüleme
+Ortalama hesaplama
 
-Completed course listesi
+Detay sayfasında exam listeleri
 
-Ortalama hesaplama doğruluğu
+🎯 Sonuç
 
-🎯 POC’in Amacı ve Sonuç
+Bu proje, Spring Boot backend, PostgreSQL veritabanı ve React frontend kullanılarak oluşturulmuş uçtan uca bir POC’tir.
+Katmanlı mimari, REST API tasarımı, modern frontend geliştirme ve veri modellemesi gibi konuları uygulamalı şekilde göstermektedir.
 
-Bu proje ile:
-
-Katmanlı backend mimarisi
-
-React tabanlı modern UI
-
-REST API tasarımı
-
-Veri modelleme
-
-JPA ilişkileri
-
-Axios ile communication
-
-Kod okunabilirliği
-
-Basit ama gerçekçi iş mantığı
-
-konularında tam kapsamlı bir POC hazırlanmıştır.
-
-Proje, gerçek bir üretim uygulamasının sadeleştirilmiş ama profesyonel bir temsili olacak şekilde tasarlanmıştır.
+POC; gerçek bir kurumsal uygulamanın sadeleştirilmiş ama profesyonel bir örneği olacak şekilde hazırlanmıştır.
