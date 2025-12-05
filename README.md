@@ -1,13 +1,15 @@
-IQB Student Management POC
-Spring Boot · PostgreSQL · React · Vite
+📚 Student Management System – Full Stack Application
 
-Bu proje, IQB Solutions teknik değerlendirmesi kapsamında hazırlanan bir full-stack Proof-of-Concept (POC) uygulamasıdır.
-Amaç; temiz backend mimarisi, modern frontend geliştirme ve gerçek bir veritabanı kullanarak öğrenci–ders–sınav yönetimini modelleyen bir sistem kurmaktır.
+Öğrenci, ders ve sınav yönetimini tek bir çatı altında toplayan uçtan uca bir öğrenci yönetim sistemi geliştirdim.
+Sistem; öğrenci bilgisi kaydı, ders yönetimi, sınav ekleme, tamamlanan derslerin hesaplanması ve çok kriterli öğrenci arama gibi temel işlemleri modern bir web arayüzü üzerinden sağlar.
 
-📁 Proje Yapısı
-iqb/
- ├── backend/     → Spring Boot REST API
- └── frontend/    → React + Vite SPA
+Kullanıcı arayüzü hızlı ve akıcı bir deneyim sunarken; backend tarafı güvenilir veri işleme, doğrulama ve katmanlı mimariyle tasarlanmıştır.
+Uygulama, hem yönetim paneli hem de öğrenci bazlı detay sayfalarıyla gerçek bir okul/kurum işleyişini modellemektedir.
+
+⚙️ Teknik Yapı
+student-management/
+ ├── backend/      → Spring Boot REST API
+ └── frontend/     → React + Vite (SPA)
 
 🏛 Backend (Spring Boot)
 Kullanılan Teknolojiler
@@ -18,9 +20,7 @@ Spring Boot 3.5.x
 
 Spring Web
 
-Spring Data JPA
-
-Hibernate
+Spring Data JPA & Hibernate
 
 PostgreSQL
 
@@ -28,80 +28,67 @@ Lombok
 
 Validation API
 
-Paket Yapısı
-com.iqb.backend
- ├── controller        → REST endpoint’leri
- ├── service           
- │     └── impl        → İş mantığı implementasyonları
- ├── repository        → JPA repository interface’leri
- ├── model             → Entity sınıfları
- ├── dto               → Özel dönüş modelleri
- └── exception         → Global hata yönetimi
-
 Domain Modelleri
-Student
-id
-fullName
-email
-gsmNumber
-number
-examResults (OneToMany)
 
-Course
-id
-name
-examResults (OneToMany)
+✔ Student → id, fullName, email, gsmNumber, number, examResults
+✔ Course → id, name, examResults
+✔ ExamResult → id, student, course, score
 
-ExamResult
-id
-score
-student (ManyToOne)
-course (ManyToOne)
+Bir öğrenci, bir ders için en az 3 sınav notuna sahipse o dersi tamamlamış kabul edilir .
 
-Tamamlanmış Kurs Mantığı
+Paket Yapısı
+com.app.backend
+ ├── controller     → REST endpoint'leri
+ ├── service        → iş mantığı
+ │     └── impl     → service implementasyonları
+ ├── repository     → JPA repository interface'leri
+ ├── model          → entity sınıfları
+ ├── dto            → veri transfer modelleri
+ └── exception      → global hata yönetimi
 
-Bir kurs, bir öğrenci için en az 3 sınav sonucu varsa completed kabul edilir.
-
-🌐 REST API Endpointleri
+🌐 REST API Örnek Endpoint’ler
 Students
-GET    /api/students
-GET    /api/students/search?q=
-GET    /api/students/{id}
-POST   /api/students
-PUT    /api/students/{id}
+
+GET /api/students
+
+GET /api/students/search?q=
+
+GET /api/students/{id}
+
+POST /api/students
+
+PUT /api/students/{id}
+
 DELETE /api/students/{id}
 
 Exams
-GET    /api/students/{id}/exams
-POST   /api/exams
 
-Completed Courses & Average
-GET    /api/students/{id}/average
+GET /api/students/{id}/exams
 
-🗄 Veritabanı (PostgreSQL)
-Gerekli Kurulum
+POST /api/exams
 
-PostgreSQL'de bir veritabanı oluştur:
+Completed Courses & Averages
 
-CREATE DATABASE iqb_poc;
+GET /api/students/{id}/average
 
-Spring Konfigürasyonu
+🗄 PostgreSQL
 
-backend/src/main/resources/application.properties
+Veritabanı oluşturma:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/iqb_poc
+CREATE DATABASE sms_db;
+
+
+Spring config:
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/sms_db
 spring.datasource.username=postgres
 spring.datasource.password=yourpassword
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-
-
-Hibernate entity tanımlarına göre tabloları otomatik oluşturur.
 
 ⚛️ Frontend (React + Vite)
-Kullanılan Teknolojiler
+Teknolojiler
 
 React 18
 
@@ -113,63 +100,57 @@ Bootstrap 5
 
 React Router DOM
 
-Klasör Yapısı
+Proje Yapısı
 src/
- ├── api/
- │     └── axios.js
- ├── pages/
- │     ├── StudentList.jsx
- │     ├── StudentDetail.jsx
- │     └── StudentCreate.jsx
+ ├── api/            → axios config
+ ├── pages/          → StudentList, Detail, Create
  ├── components/
  ├── App.jsx
  └── main.jsx
 
-Axios Konfigürasyonu (src/api/axios.js)
-import axios from "axios";
+
+Örnek axios ayarı:
 
 export default axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
 🚀 Çalıştırma
-Backend
+Backend:
 cd backend
 mvn clean install
 mvn spring-boot:run
 
 
-Backend → http://localhost:8080 üzerinde çalışır.
+Backend → http://localhost:8080
 
-Frontend
+Frontend:
 cd frontend
 npm install
 npm run dev
 
 
-Frontend → http://localhost:5173 üzerinde çalışır.
+Frontend → http://localhost:5173
 
 🧪 Test Senaryoları
 
-Öğrenci ekleme / düzenleme / silme
+Öğrenci ekleme/düzenleme/silme
 
 Öğrenci arama (name, email, gsm, number)
 
 Ders oluşturma
 
-Öğrenciye exam ekleme
+Öğrenciye sınav ekleme
 
-Exam listeleme
-
-Completed courses hesaplama
+Sınav listeleme
 
 Ortalama hesaplama
+
+Tamamlanan derslerin tespiti
 
 Detay sayfasında exam listeleri
 
 🎯 Sonuç
 
-Bu proje, Spring Boot backend, PostgreSQL veritabanı ve React frontend kullanılarak oluşturulmuş uçtan uca bir POC’tir.
-Katmanlı mimari, REST API tasarımı, modern frontend geliştirme ve veri modellemesi gibi konuları uygulamalı şekilde göstermektedir.
-
-POC; gerçek bir kurumsal uygulamanın sadeleştirilmiş ama profesyonel bir örneği olacak şekilde hazırlanmıştır.
+Bu proje, modern bir full-stack yapıyı (Spring Boot + PostgreSQL + React) kullanarak öğrenci yönetimi, ders işlemleri ve sınav sonuçlarının işlendiği gerçekçi bir sistem oluşturur.
+Katmanlı mimari, veri bütünlüğü, domain modelleme ve kullanıcı deneyimi açısından profesyonel bir örnek teşkil eder.
